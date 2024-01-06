@@ -40,7 +40,7 @@ async function scrapeImage(newsUrl) {
 }
 
 // Route
-app.get('/api/news', async (req, res) => {
+app.get('/api', async (req, res) => {
   try {
     const response = await axios.get(url);
     if (response.status === 200) {
