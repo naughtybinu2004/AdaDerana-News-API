@@ -40,6 +40,10 @@ async function scrapeImage(newsUrl) {
 }
 
 // Route
+app.get('/', (req, res) => {
+  res.send('Hello, this is the root path!');
+});
+
 app.get('/api', async (req, res) => {
   try {
     const response = await axios.get(url);
