@@ -10,13 +10,16 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   next();
 });
-
 async function scrapeDescription(newsUrl) {
   try {
     const response = await axios.get(newsUrl);
     if (response.status === 200) {
       const $ = cheerio.load(response.data);
-      const newsDescription = $('.news-content p').text();
+      let paragraphs = [];
+      $('.news-content p').each((i, el) => {
+        paragraphs.push($(el).text().trim());
+      });
+      const newsDescription = paragraphs.join('\n\n');
       return newsDescription;
     }
   } catch (error) {
@@ -30,7 +33,7 @@ async function scrapeImage(newsUrl) {
     const response = await axios.get(newsUrl);
     if (response.status === 200) {
       const $ = cheerio.load(response.data);
-      const imageUrl = $('div.news-banner img.img-responsive').attr('src');
+     const imageUrl = $('div.news-banner img.img-responsive').attr('src');
       return imageUrl;
     }
   } catch (error) {
@@ -39,7 +42,7 @@ async function scrapeImage(newsUrl) {
   return '';
 }
 
-// Route
+// Route 
 app.get('/', async (req, res) => {
   try {
     const response = await axios.get(url);
@@ -59,7 +62,7 @@ app.get('/', async (req, res) => {
         image: imageUrl,
         time: fullTime,
         new_url: newsUrl,
-        powerd_by: "🌴NB DEV SL🌴 ⚠️if you are using this API, give the credits to the owner⚠️"
+ powerd_by: "🌴NB DEV SL🌴 ⚠️if yo are use this api give the credits to owner⚠️"     
       };
 
       res.json([newsData]);
@@ -71,4 +74,6 @@ app.get('/', async (req, res) => {
   }
 });
 
-module.exports = app;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
